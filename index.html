@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f3ef">
+<title>Ruang Kata — Kolaborasi Cerita</title>
+<style>
+:root{--bg:#f7f3ef;--paper:#fffdfa;--ink:#302d2b;--muted:#8b817b;--line:#e9e1da;--accent:#8b6f83;--accent2:#d9c5d1;--green:#658574;--shadow:0 12px 35px #55443b12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-serif,Georgia,serif;min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.top{max-width:1000px;margin:auto;padding:22px 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font:600 13px/1.2 system-ui,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--accent)}
+.brand small{display:block;letter-spacing:.04em;text-transform:none;font-weight:400;color:var(--muted);margin-top:5px}
+.pill{font:12px system-ui,sans-serif;border:1px solid var(--line);border-radius:99px;padding:8px 11px;color:var(--muted);background:#ffffff9c}
+main{max-width:1000px;margin:0 auto;padding:18px;display:grid;grid-template-columns:245px minmax(0,1fr);gap:18px}
+.panel,.paper{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.panel{padding:18px;height:max-content}
+.eyebrow{font:10px system-ui,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.field{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink);font:14px system-ui,sans-serif;outline:none}
+.field:focus,textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 3px #d9c5d133}
+.btn{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 14px;font:600 12px system-ui,sans-serif;width:100%;margin-top:9px}
+.btn.secondary{background:#f1e9ee;color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.side-note{font:12px/1.55 system-ui,sans-serif;color:var(--muted);margin:14px 0 0}
+.paper{padding:clamp(20px,5vw,48px);min-height:76vh}
+.paper-head{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px}
+.kicker{font:10px system-ui,sans-serif;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,42px);font-weight:500;line-height:1.12;margin:12px 0 7px}
+.subtitle{font:12px system-ui,sans-serif;color:var(--muted)}
+.title-input{border:0;background:transparent;font:inherit;font-size:clamp(28px,5vw,42px);font-weight:500;width:100%;padding:0;color:var(--ink);outline:none}
+#story{width:100%;min-height:48vh;resize:vertical;border:0;outline:0;background:transparent;color:#49413d;font:17px/1.95 Georgia,serif;padding:0}
+#story::placeholder{color:#b9aea7}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font:11px system-ui,sans-serif;color:var(--muted)}
+.status{display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+#message{font:12px/1.5 system-ui,sans-serif;color:var(--muted);min-height:18px;margin-top:9px}
+.hidden{display:none!important}
+footer{text-align:center;color:#a79b94;font:11px system-ui,sans-serif;padding:8px 18px 28px}
+@media(max-width:700px){main{grid-template-columns:1fr;padding:10px 12px 20px;gap:12px}.top{padding:17px 14px 9px}.panel{padding:14px}.panel-inner{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.panel-inner .eyebrow{grid-column:1/-1;margin-bottom:0}.panel-inner .field,.panel-inner .btn{margin:0}.panel-inner .side-note{grid-column:1/-1;margin:3px 0 0}.paper{min-height:68vh;padding:23px 19px;border-radius:15px}#story{font-size:16px;min-height:48vh}.toolbar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Ruang Kata<small>sebuah ruang untuk cerita yang tumbuh bersama</small></div>
+  <div class="pill" id="roomBadge">Belum terhubung</div>
+</header>
+<main>
+  <aside class="panel">
+    <div class="panel-inner">
+      <p class="eyebrow">Ruang kolaborasi</p>
+      <input class="field" id="roomInput" placeholder="Kode ruang" aria-label="Kode ruang">
+      <button class="btn" id="joinBtn">Masuk ruang</button>
+      <button class="btn secondary" id="newBtn">＋ Buat cerita baru</button>
+      <button class="btn ghost" id="shareBtn">Salin link undangan</button>
+      <p class="side-note">Bagikan link yang sama ke teman. Siapa pun yang memiliki link dapat membuka dan mengedit naskah ini.</p>
+    </div>
+    <p class="side-note">Catatan: perubahan disinkronkan lewat internet. Untuk saat ini editor berupa teks biasa; hindari mengedit bagian yang sama persis secara bersamaan.</p>
+  </aside>
+  <section class="paper">
+    <div class="paper-head">
+      <div class="kicker">Naskah bersama · <span id="roomShort">ruang pribadi</span></div>
+      <input class="title-input" id="storyTitle" value="Judul cerita" aria-label="Judul cerita">
+      <div class="subtitle">Tulis pelan-pelan. Cerita ini milik kalian berdua.</div>
+    </div>
+    <textarea id="story" placeholder="Mulai ceritamu di sini...&#10;&#10;Bagian yang kamu tulis akan muncul di perangkat temanmu setelah tersinkron."></textarea>
+    <div class="toolbar">
+      <div class="status"><span class="dot"></span><span id="syncText">Belum terhubung ke ruang</span></div>
+      <span id="count">0 kata</span>
+    </div>
+    <div id="message">Buat ruang baru atau masukkan kode ruang untuk mulai.</div>
+  </section>
+</main>
+<footer>RUANG KATA · tulis, bagikan, kembangkan bersama</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// 1) Buat project Firebase, lalu tempel konfigurasi web kamu di bawah.
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  projectId: "ISI_PROJECT_ID",
+  appId: "ISI_APP_ID"
+};
+
+const $ = id => document.getElementById(id);
+const titleEl=$("storyTitle"), storyEl=$("story"), roomInput=$("roomInput");
+let db, currentRoom="", unsubscribe=null, ready=false, applyingRemote=false, saveTimer=null, lastRemote="";
+const params=new URLSearchParams(location.search);
+const makeCode=()=>Math.random().toString(36).slice(2,8).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase();
+const setMessage=t=>$("message").textContent=t;
+const setStatus=t=>$("syncText").textContent=t;
+function updateCount(){const n=storyEl.value.trim()?storyEl.value.trim().split(/\s+/).length:0;$("count").textContent=n+" kata";}
+function updateUrl(code){const u=new URL(location.href);u.searchParams.set("room",code);history.replaceState({}, "", u);$("roomBadge").textContent="Ruang "+code;$("roomShort").textContent=code;roomInput.value=code;}
+function applyDoc(data){applyingRemote=true;if(data.title!==undefined)titleEl.value=data.title;if(data.body!==undefined){storyEl.value=data.body;lastRemote=data.body;}applyingRemote=false;updateCount();}
+async function connectRoom(code, create=false){
+  if(!db){setMessage("Firebase belum disiapkan. Ikuti langkah di README untuk menghubungkan database.");return;}
+  code=code.trim().toUpperCase();if(!code){setMessage("Masukkan kode ruang dulu.");return;}
+  if(unsubscribe){unsubscribe();unsubscribe=null;}
+  currentRoom=code;ready=false;updateUrl(code);setStatus("Menghubungkan…");setMessage("Menghubungkan ke ruang cerita…");
+  const ref=doc(db,"rooms",code);
+  try{
+    if(create) await setDoc(ref,{title:"Judul cerita",body:"",updatedAt:serverTimestamp()});
+    unsubscribe=onSnapshot(ref,snap=>{
+      if(!snap.exists()){setStatus("Ruang belum ada");setMessage("Kode ruang tidak ditemukan. Periksa link atau buat ruang baru.");return;}
+      const data=snap.data();
+      if(!ready){applyDoc(data);ready=true;} else {
+        // Jangan menimpa ketikan lokal yang belum selesai dikirim.
+        if(data.body!==undefined && data.body!==lastRemote && data.body!==storyEl.value && !document.activeElement.isSameNode(storyEl)) applyDoc(data);
+        if(data.title!==undefined && document.activeElement!==titleEl && data.title!==titleEl.value) titleEl.value=data.title;
+      }
+      setStatus("Tersinkron · perubahan tampil langsung");setMessage("Ruang aktif. Bagikan link undangan ke temanmu.");
+    },err=>{setStatus("Koneksi bermasalah");setMessage("Tidak bisa membaca ruang: "+err.message);});
+  }catch(e){setMessage("Gagal membuka ruang: "+e.message);}
+}
+async function save(){
+ if(!db||!currentRoom||!ready||applyingRemote)return;
+ const body=storyEl.value, title=titleEl.value;
+ try{await updateDoc(doc(db,"rooms",currentRoom),{body,title,updatedAt:serverTimestamp()});lastRemote=body;setStatus("Tersimpan");}
+ catch(e){setStatus("Belum tersimpan");setMessage("Gagal menyimpan: "+e.message);}
+}
+function scheduleSave(){if(!ready||applyingRemote)return;setStatus("Menyimpan…");clearTimeout(saveTimer);saveTimer=setTimeout(save,450);updateCount();}
+storyEl.addEventListener("input",scheduleSave);titleEl.addEventListener("input",scheduleSave);
+$("joinBtn").onclick=()=>connectRoom(roomInput.value);
+$("newBtn").onclick=()=>connectRoom(makeCode(),true);
+$("shareBtn").onclick=async()=>{if(!currentRoom){setMessage("Masuk atau buat ruang dulu.");return;}try{await navigator.clipboard.writeText(location.href);setMessage("Link undangan berhasil disalin.");}catch{setMessage("Salin link dari bilah alamat browser.");}};
+updateCount();
+(async()=>{
+ if(firebaseConfig.apiKey.startsWith("ISI_")){setStatus("Perlu konfigurasi");return;}
+ try{const app=initializeApp(firebaseConfig);const auth=getAuth(app);await signInAnonymously(auth);db=getFirestore(app);setStatus("Siap terhubung");if(params.get("room"))connectRoom(params.get("room"));}
+ catch(e){setStatus("Gagal memulai");setMessage("Periksa konfigurasi Firebase dan Authentication: "+e.message);}
+})();
+</script>
+</body>
+</html>
